@@ -35,6 +35,7 @@ Example of a simple implementation to build a stream limit api on top of Redis
 - `REDIS_PORT` if not default (6379)
 - `REDIS_AUTH`
 - `STREAM_LIMIT` To set the limitation in maximum amount of sessions per user (default 2)
+- `PING_INTERVAL` The interval to wait for the next ping, without killing the session (default 10 seconds)
 
 ## Docker
 

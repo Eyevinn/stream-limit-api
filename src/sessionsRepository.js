@@ -2,6 +2,8 @@ const redisClient = require("./helpers/redisClient");
 const redisSubscriber = require("./helpers/redisSubscriber");
 const logHelper = require("./helpers/logHelper");
 
+const PING_INTERVAL = process.env.PING_INTERVAL || 10;
+
 (async () => {
   await redisSubscriber.subscribe("__keyevent@0__:expired");
   redisSubscriber.on("message", (channel, key) => {
@@ -72,7 +74,7 @@ const _getInclExpiration = async key => {
 const _addDevice = async (userId, deviceId) => {
   logHelper.log(`Add session for user ${userId}, device ${deviceId}`);
   const deviceKey = generateKey(KEY_PREFIX, userId, deviceId);
-  await redisClient.setex(deviceKey, 10, 1);
+  await redisClient.setex(deviceKey, Number(PING_INTERVAL), 1);
 
   return true;
 };
