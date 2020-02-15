@@ -72,7 +72,7 @@ const _checkDevice = async deviceKey => {
 const _addSession = async userId => {
   const userKey = generateKey(KEY_PREFIX, userId);
   const currentSessions = (await redisClient.get(userKey)) || 0;
-  await redisClient.set(userKey, currentSessions + 1);
+  await redisClient.set(userKey, Number(currentSessions) + 1);
   return true;
 };
 
@@ -80,7 +80,7 @@ const _removeSession = async userId => {
   const userKey = generateKey(KEY_PREFIX, userId);
   const currentSessions = await redisClient.get(userKey);
   if (!currentSessions) return true;
-  await redisClient.set(userKey, currentSessions - 1);
+  await redisClient.set(userKey, Number(currentSessions) - 1);
   return true;
 };
 
