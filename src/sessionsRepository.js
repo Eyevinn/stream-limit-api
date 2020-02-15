@@ -1,11 +1,11 @@
 const redisClient = require("./helpers/redisClient");
 const redisSubscriber = require("./helpers/redisSubscriber");
+const logHelper = require("./helpers/logHelper");
 
 (async () => {
   await redisSubscriber.subscribe("__keyevent@0__:expired");
   redisSubscriber.on("message", (channel, key) => {
-    console.log(`Message on channel ${channel}`);
-    console.log("KEY: " + key);
+    logHelper.log(`Received message on channel ${channel}, with key ${key}`);
     if (channel.includes("expired")) {
       const [prefix, userId, sessionId] = key.split(":");
       _removeSession(userId);
@@ -17,11 +17,13 @@ const KEY_PREFIX = "streams";
 const generateKey = (...args) => args.join(":");
 
 const start = async (userId, deviceId) => {
+  logHelper.log(`Start session for user ${userId}, device ${deviceId}`);
   await Promise.all([_addSession(userId), _addDevice(userId, deviceId)]);
   return true;
 };
 
 const ping = async (userId, deviceId) => {
+  logHelper.log(`Keep alive session for user ${userId}, device ${deviceId}`);
   const deviceKey = generateKey(KEY_PREFIX, userId, deviceId);
   const sessionExist = await _checkDevice(deviceKey);
   if (sessionExist) {
@@ -33,11 +35,13 @@ const ping = async (userId, deviceId) => {
 };
 
 const end = async (userId, deviceId) => {
+  logHelper.log(`End session for user ${userId}, device ${deviceId}`);
   await Promise.all([_removeSession(userId), _removeDevice(userId, deviceId)]);
   return true;
 };
 
 const kill = async (userId, deviceId) => {
+  logHelper.log(`Kill session for user ${userId}, device ${deviceId}`);
   return await end(userId, deviceId);
 };
 
@@ -66,6 +70,7 @@ const _getInclExpiration = async key => {
 };
 
 const _addDevice = async (userId, deviceId) => {
+  logHelper.log(`Add session for user ${userId}, device ${deviceId}`);
   const deviceKey = generateKey(KEY_PREFIX, userId, deviceId);
   await redisClient.setex(deviceKey, 10, 1);
 
@@ -73,6 +78,7 @@ const _addDevice = async (userId, deviceId) => {
 };
 
 const _removeDevice = async (userId, deviceId) => {
+  logHelper.log(`Remove session for user ${userId}, device ${deviceId}`);
   const deviceKey = generateKey(KEY_PREFIX, userId, deviceId);
   await redisClient.del(deviceKey);
   return true;
@@ -84,7 +90,7 @@ const _checkDevice = async deviceKey => {
 };
 
 const _addSession = async userId => {
-  console.log(`Add session for user: ${userId}`);
+  logHelper.log(`Add session for user: ${userId}`);
   const userKey = generateKey(KEY_PREFIX, userId);
   const currentSessions = (await redisClient.get(userKey)) || 0;
   await redisClient.set(userKey, Number(currentSessions) + 1);
@@ -92,7 +98,7 @@ const _addSession = async userId => {
 };
 
 const _removeSession = async userId => {
-  console.log(`Remove session for user: ${userId}`);
+  logHelper.log(`Remove session for user: ${userId}`);
   const userKey = generateKey(KEY_PREFIX, userId);
   const currentSessions = await redisClient.get(userKey);
   if (!currentSessions) return true;
