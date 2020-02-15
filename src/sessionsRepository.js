@@ -1,4 +1,17 @@
 const redisClient = require("./helpers/redisClient");
+const redisSubscriber = require("./helpers/redisSubscriber");
+
+(async () => {
+  await redisSubscriber.subscribe("__keyevent@0__:expired");
+  redisSubscriber.on("message", (channel, key) => {
+    console.log(`Message on channel ${channel}`);
+    console.log("KEY: " + key);
+    if (channel.includes("expired")) {
+      const [prefix, userId, sessionId] = key.split(":");
+      _removeSession(userId);
+    }
+  });
+})();
 
 const KEY_PREFIX = "streams";
 const generateKey = (...args) => args.join(":");
@@ -55,6 +68,7 @@ const _getInclExpiration = async key => {
 const _addDevice = async (userId, deviceId) => {
   const deviceKey = generateKey(KEY_PREFIX, userId, deviceId);
   await redisClient.setex(deviceKey, 10, 1);
+
   return true;
 };
 
@@ -70,6 +84,7 @@ const _checkDevice = async deviceKey => {
 };
 
 const _addSession = async userId => {
+  console.log(`Add session for user: ${userId}`);
   const userKey = generateKey(KEY_PREFIX, userId);
   const currentSessions = (await redisClient.get(userKey)) || 0;
   await redisClient.set(userKey, Number(currentSessions) + 1);
@@ -77,6 +92,7 @@ const _addSession = async userId => {
 };
 
 const _removeSession = async userId => {
+  console.log(`Remove session for user: ${userId}`);
   const userKey = generateKey(KEY_PREFIX, userId);
   const currentSessions = await redisClient.get(userKey);
   if (!currentSessions) return true;
