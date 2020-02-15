@@ -22,11 +22,11 @@ Example of a simple implementation to build a stream limit api on top of Redis
 
 ## Endpoints
 
-- POST `/:userId/start/:deviceId` To start a session
-- POST `/:userId/ping/:deviceId` To keep the session alive
-- POST `/:userId/end/:deviceId` To end a session
-- POST `/:userId/kill/:deviceId` To kill a session
-- GET `/:userId/list` To get a user's ongoing sessions
+- POST `/sessions/:userId/start/:deviceId` To start a session
+- POST `/sessions/:userId/ping/:deviceId` To keep the session alive
+- POST `/sessions/:userId/end/:deviceId` To end a session
+- POST `/sessions/:userId/kill/:deviceId` To kill a session
+- GET `/sessions/:userId/list` To get a user's ongoing sessions
 
 ## Environment variables
 

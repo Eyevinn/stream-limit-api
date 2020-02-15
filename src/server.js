@@ -11,7 +11,7 @@ fastify.register(fastifyRateLimit, {
 });
 
 fastify.register(require("./routes"), {
-  prefix: "/ratings"
+  prefix: "/sessions"
 });
 
 module.exports = fastify;
