@@ -30,7 +30,7 @@ const kill = async (userId, deviceId) => {
 
 const list = async userId => {
   if (!userId) return false;
-  const pattern = generateKey(`*${KEY_PREFIX}`, `${userId}*`);
+  const pattern = generateKey(`*${KEY_PREFIX}`, `${userId}:*`);
   const keys = await redisClient.keys(pattern);
   if (!keys) return [];
 
