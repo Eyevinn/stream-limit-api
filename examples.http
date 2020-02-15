@@ -1,0 +1,20 @@
+### start session
+POST http://localhost:3000/sessions/user1/start/device1
+
+### keep session alive
+POST http://localhost:3000/sessions/user1/ping/device1
+
+### end session
+POST http://localhost:3000/sessions/user1/end/device1
+
+### kill session
+POST http://localhost:3000/sessions/user1/kill/device1
+
+### get sessions for user
+GET http://localhost:3000/sessions/user1/list
+
+# - POST `/:userId/start/:deviceId` To start a session
+# - POST `/:userId/ping/:deviceId` To keep the session alive
+# - POST `/:userId/end/:deviceId` To end a session
+# - POST `/:userId/kill/:deviceId` To kill a session
+# - GET `/:userId/list` To get a user's ongoing sessions
