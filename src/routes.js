@@ -9,7 +9,7 @@ module.exports = (fastify, opts, next) => {
     const currentSessions = await sessionsRepository.currentSessions(userId);
     const authorized = currentSessions < STREAM_LIMIT;
     if (!authorized) {
-      return res.status(403).send("Too many sessions");
+      return res.status(401).send("Too many sessions");
     }
     await sessionsRepository.start(userId, deviceId);
     res.status(200).send("Session started");
