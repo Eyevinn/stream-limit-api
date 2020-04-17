@@ -7,6 +7,8 @@ Example of a simple implementation to build a stream limit api on top of Redis
 - [Favorites API](https://github.com/Eyevinn/favorites-api)
 - [Ratings API](https://github.com/Eyevinn/ratings-api)
 - [Continue Watching API](https://github.com/Eyevinn/continue-watching-api)
+- [User Segmentation API](https://github.com/Eyevinn/user-segmentation-api)
+- [Recommendation Engine](https://github.com/Eyevinn/eye-recommender)
 
 ## Requirements
 
