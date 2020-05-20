@@ -94,8 +94,7 @@ const _checkDevice = async deviceKey => {
 const _addSession = async userId => {
   logHelper.log(`Add session for user: ${userId}`);
   const userKey = generateKey(KEY_PREFIX, userId);
-  const currentSessions = (await redisClient.get(userKey)) || 0;
-  await redisClient.set(userKey, Number(currentSessions) + 1);
+  await redisClient.incr(userKey);
   return true;
 };
 
