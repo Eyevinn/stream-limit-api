@@ -1,8 +1,7 @@
 const fastify = require("fastify")({
   ignoreTrailingSlash: true
 });
-const cors = require("cors");
-fastify.use(cors());
+fastify.register(require("fastify-cors"));
 
 const fastifyRateLimit = require("fastify-rate-limit");
 fastify.register(fastifyRateLimit, {

@@ -1,6 +1,9 @@
 ### start session
 POST http://localhost:3000/sessions/user1/start/device1
 
+### start session 2
+POST http://localhost:3000/sessions/user1/start/device2
+
 ### keep session alive
 POST http://localhost:3000/sessions/user1/ping/device1
 
